@@ -1,3 +1,5 @@
+# Laboratório 01
+
 ## Realizado no dia 03 de março
 
 **Conteúdo:** Foi criado um código em C que foi publicado neste repositório do GitHub. Vale citar que o código foi compilado no ambiente da AWS utilizando a distribuição RedHat Linux.
