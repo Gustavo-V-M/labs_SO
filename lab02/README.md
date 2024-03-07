@@ -9,7 +9,6 @@
 
 ## Índice
 - `teste_fork.c`: Código em C escrito pelo integrante do grupo
-- `commit.png`: *Screenshot* com o *commit* e o *push* dos arquivos
 - `compilacao.png`: *Screenshot* com o arquivo sendo compilado e executado
 
 ## Compilação
@@ -23,3 +22,4 @@
 ## Change Log
 - 05/03/2024 -> Inicializado o Repositório
 - 06/03/2024 -> Finalizado o arquivo `test_fork` e o `README` 
+- 07/03/2024 -> Adicionado o screenshot com a compilação
