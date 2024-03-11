@@ -1,7 +1,7 @@
 # Laboratório 2
 ## Realizado na semana do dia 04 de março
 
-**Conteúdo:** Foi criado um código em C que realiza uma troca de mensagens entre um processo pai e um processo filho utilizando as funções utilizando Pipes . Vale citar que o código foi compilado no ambiente da AWS utilizando a distribuição RedHat Linux <br> 
+**Conteúdo:** Foi criado um código em C que realiza uma troca de mensagens entre um processo pai e um processo filho utilizando Pipes. Vale citar que o código foi compilado no ambiente da AWS utilizando a distribuição RedHat Linux <br> 
 **OBS:** A maquina virtual da AWS foi acessada da maquina pessoal do integrante do grupo pelo terminal do linux utilizando o protocolo SSH
 
 **Integrante:**
