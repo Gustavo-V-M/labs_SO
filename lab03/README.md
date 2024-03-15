@@ -18,17 +18,17 @@
 
 **Requisitos:**
 
-- `gcc Version 11.4.1`s
+- `gcc Version 11.4.1`
 
 **Etapas:**
 
-1. Compilar o arquivo com o comando `$ gcc test_thread.c -o test_fork`
-2. Executar o arquivo com o comando `$ ./test_fork`
+1. Compilar o arquivo com o comando `$ gcc teste_threads.c -o teste_threads`
+2. Executar o arquivo com o comando `$ ./teste_threads`
 
 ## Change Log
 
 - 14/03/2024 -> Inicializado o Repositório
-- 14/03/2024 -> Finalizado o arquivo `test_thread.c`
+- 14/03/2024 -> Finalizado o arquivo `test_threads.c`
 - 15/04/2024 -> README finalizado
 
 ---------------------------------------
