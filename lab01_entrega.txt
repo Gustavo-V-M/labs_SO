@@ -1,5 +1,0 @@
-Integrante:
-Gustavo Vilela Mitraud 10400866
-
-Link do repositório: 
-https://github.com/Gustavo-V-M/labs_SO/tree/main/lab01
