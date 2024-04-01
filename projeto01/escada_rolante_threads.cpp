@@ -12,45 +12,51 @@
  * https://en.cppreference.com/w/cpp/thread/thread - Threads em c++*/
 
 using namespace std;
-int current_direction = -1;
-int timer = 0;
-int final_time = 0;
-bool entered = false;
+
 struct person {
   int arrive_time;
   int direction;
 };
 
-queue<person> person_queue;
+struct stair {
+  queue<person> person_queue;
+  int direction;
+  int final_time;
+  int timer;
+};
 
-void compute_person(person *person_list, int person_count, int i) {
-  if (person_list[i].arrive_time == timer) {
-    person_queue.push(person_list[i]);
-    if (person_queue.front().direction == current_direction ||
-        current_direction == -1) {
-      current_direction = person_queue.front().direction;
-      i++;
-    } else {
-      if (current_direction == 0) {
-        current_direction = 1;
-      } else {
-        current_direction = 0;
-      }
-    }
-  }
-}
-void calculate_total_time(int arrive_time) {
-  if (final_time < arrive_time + 10) {
-    final_time = arrive_time + 10;
-  }
-}
-void stair(person *person_list, int person_count) {
+stair s;
+
+void compute_stair(person person_list[], int person_count) {
   int i = 0;
   while (i < person_count) {
-    timer++;
-    compute_person(person_list, person_count, i);
+    if (s.person_queue.empty()) {
+      s.direction = person_list[i].direction;
+      s.final_time += person_list[i].arrive_time + 10;
+    }
+    s.person_queue.push(person_list[i]);
+    i++;
   }
 }
+
+void compute_timer() {
+  while (!s.person_queue.empty()) {
+    person p = s.person_queue.front();
+    if (p.direction == s.direction) {
+      s.final_time += (p.arrive_time + 10) - s.final_time;
+      s.person_queue.pop();
+    } else {
+      if (s.timer >= s.final_time) {
+        s.direction = p.direction;
+        s.final_time += 10;
+        s.person_queue.pop();
+      }
+    }
+    s.timer++;
+  }
+}
+
+void enter_person(person person_list[], int person_count) {}
 
 int main(int argc, char *argv[]) {
 
@@ -59,20 +65,28 @@ int main(int argc, char *argv[]) {
   p1.arrive_time = 5;
 
   person p2;
-  p2.direction = 0;
-  p2.arrive_time = 8;
+  p2.direction = 1;
+  p2.arrive_time = 7;
 
   person p3;
   p3.direction = 0;
-  p3.arrive_time = 13;
+  p3.arrive_time = 9;
 
   person person_list[3] = {p1, p2, p3};
 
-  thread stair_thread(stair, person_list, 3);
+  queue<person> person_queue;
 
+  s.person_queue = person_queue;
+  s.final_time = 0;
+  s.timer = -1;
+  s.direction = 0;
+
+  thread stair_thread(compute_stair, person_list, 3);
   stair_thread.join();
+  thread timer_thread(compute_timer);
+  timer_thread.join();
 
-  cout << final_time << endl;
+  std::cout << s.final_time << endl;
 
   return EXIT_SUCCESS;
 }
