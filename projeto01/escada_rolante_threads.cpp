@@ -1,15 +1,18 @@
+#include <cstddef>
+#include <cstdio>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
-#include <ostream>
 #include <queue>
-#include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <thread>
 #include <unistd.h>
 
 /*
  * referências:
- * https://en.cppreference.com/w/cpp/thread/thread - Threads em c++*/
+ * https://en.cppreference.com/w/cpp/thread/thread - Threads em c++
+ * https://en.cppreference.com/w/cpp/language/new - Uso do new em c++*/
 
 using namespace std;
 
@@ -50,29 +53,45 @@ void compute_timer() {
         s.direction = p.direction;
         s.final_time += 10;
         s.person_queue.pop();
+      } else {
+        s.person_queue.pop();
+        s.person_queue.push(p);
       }
     }
     s.timer++;
   }
 }
 
-void enter_person(person person_list[], int person_count) {}
-
 int main(int argc, char *argv[]) {
 
-  person p1;
-  p1.direction = 0;
-  p1.arrive_time = 5;
+  if (argc != 2) {
+    printf("Uso incorreto. uso correto: $ %s ./input/<arquivo>", argv[0]);
+    return EXIT_FAILURE;
+  }
 
-  person p2;
-  p2.direction = 1;
-  p2.arrive_time = 7;
+  FILE *file;
+  file = fopen(argv[1], "r");
 
-  person p3;
-  p3.direction = 0;
-  p3.arrive_time = 9;
+  if (file == NULL) {
+    perror("Erro na abartura do arquivo");
+    return EXIT_FAILURE;
+  }
 
-  person person_list[3] = {p1, p2, p3};
+  int person_count;
+
+  // first line contains number of people
+  fscanf(file, "%i", &person_count);
+
+  // adding each person to the list of persons
+  person *person_list = new person[person_count];
+  for (int i = 0; i < person_count; i++) {
+    int arrival_time;
+    int direction;
+    fscanf(file, "%i %i", &arrival_time, &direction);
+
+    person p = {arrival_time, direction};
+    person_list[i] = p;
+  }
 
   queue<person> person_queue;
 
@@ -81,12 +100,14 @@ int main(int argc, char *argv[]) {
   s.timer = -1;
   s.direction = 0;
 
-  thread stair_thread(compute_stair, person_list, 3);
+  thread stair_thread = thread(compute_stair, person_list, person_count);
   stair_thread.join();
-  thread timer_thread(compute_timer);
+  thread timer_thread = thread(compute_timer);
   timer_thread.join();
 
   std::cout << s.final_time << endl;
+
+  fclose(file);
 
   return EXIT_SUCCESS;
 }
