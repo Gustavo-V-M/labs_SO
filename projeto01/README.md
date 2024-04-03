@@ -1,6 +1,7 @@
 # Projeto 1
 
-Repositório referente ao projeto 1 de Sistemas operacionais do curso de Ciência da Computação.
+Repositório referente ao projeto 1 de Sistemas operacionais do curso de Ciência da Computação. \
+**OBS:** A Linguagem C++ foi utilizada ao invez da linguagem C por causa da biblioteca de Filas já inclusa no C++, já que, se fosse utilizado a linguagem C, teria que ser feita a implementação da fila do zero.
 
 **Autores:**\
 Gustavo Vilela Mitraud | 10400866
