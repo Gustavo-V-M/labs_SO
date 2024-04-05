@@ -8,6 +8,7 @@ FILES=$(ls ./input/)
 OUTPUT_FOLDER="./output/"
 
 for FILE in $FILES; do
+	echo "Testando arquivo $FILE"
 	RESULT=$(./threads.out ./input/$FILE)
 	EXPECTED=$(head -n 1 $OUTPUT_FOLDER$FILE)
 	if [[ $RESULT -ne $EXPECTED ]]; then

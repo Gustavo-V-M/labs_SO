@@ -1,11 +1,9 @@
 #include <cstddef>
 #include <cstdio>
 #include <cstdlib>
-#include <fstream>
 #include <iostream>
 #include <queue>
 #include <stdlib.h>
-#include <string>
 #include <thread>
 #include <unistd.h>
 
@@ -22,7 +20,8 @@ struct person {
 };
 
 struct stair {
-  queue<person> person_queue;
+  queue<person> direction0_queue;
+  queue<person> direction1_queue;
   int direction;
   int final_time;
   int timer;
@@ -31,41 +30,67 @@ struct stair {
 stair s;
 
 void compute_stair(person person_list[], int person_count) {
-  int i = 0;
-  while (i < person_count) {
-    if (s.person_queue.empty()) {
-      s.direction = person_list[i].direction;
-      s.final_time += person_list[i].arrive_time + 10;
+  for (int i = 0; i < person_count; i++) {
+    if (person_list[i].direction == 0) {
+      s.direction0_queue.push(person_list[i]);
+    } else {
+      s.direction1_queue.push(person_list[i]);
     }
-    s.person_queue.push(person_list[i]);
-    i++;
   }
 }
 
 void compute_timer() {
-  while (!s.person_queue.empty()) {
-    person p = s.person_queue.front();
-    if (p.direction == s.direction) {
-      s.final_time += (p.arrive_time + 10) - s.final_time;
-      s.person_queue.pop();
-    } else {
-      if (s.timer >= s.final_time) {
-        s.direction = p.direction;
-        s.final_time += 10;
-        s.person_queue.pop();
+  while (!s.direction1_queue.empty() && !s.direction0_queue.empty()) {
+    if (s.direction == -1) {
+      if (s.direction0_queue.front().arrive_time <
+          s.direction1_queue.front().arrive_time) {
+        s.final_time = s.direction0_queue.front().arrive_time + 10;
+        s.direction0_queue.pop();
+        s.direction = 0;
       } else {
-        s.person_queue.pop();
-        s.person_queue.push(p);
+        s.final_time = s.direction1_queue.front().arrive_time + 10;
+        s.direction1_queue.pop();
+        s.direction = 1;
+      }
+    } else if (s.direction == 0) {
+      if (s.direction0_queue.front().arrive_time <= s.final_time) {
+        s.final_time = s.direction0_queue.front().arrive_time + 10;
+        s.direction0_queue.pop();
+      } else if (s.direction1_queue.front().arrive_time <
+                 s.direction0_queue.front().arrive_time) {
+        s.direction = 1;
+        s.final_time += s.direction1_queue.front().arrive_time + 10;
+        s.direction1_queue.pop();
+      }
+    } else if (s.direction == 1) {
+      if (s.direction1_queue.front().arrive_time <= s.final_time) {
+        s.final_time = s.direction1_queue.front().arrive_time + 10;
+        s.direction1_queue.pop();
+      } else if (s.direction0_queue.front().arrive_time <
+                 s.direction1_queue.front().arrive_time) {
+        s.direction = 0;
+        s.final_time += s.direction0_queue.front().arrive_time + 10;
+        s.direction0_queue.pop();
       }
     }
-    s.timer++;
+  }
+  if (!s.direction0_queue.empty()) {
+    while (!s.direction0_queue.empty()) {
+      s.final_time = s.direction0_queue.front().arrive_time + 10;
+      s.direction0_queue.pop();
+    }
+  } else {
+    while (!s.direction1_queue.empty()) {
+      s.final_time = s.direction1_queue.front().arrive_time + 10;
+      s.direction1_queue.pop();
+    }
   }
 }
 
 int main(int argc, char *argv[]) {
 
   if (argc != 2) {
-    printf("Uso incorreto. uso correto: $ %s ./input/<arquivo>", argv[0]);
+    printf("Uso incorreto. uso correto: $ %s ./input/<arquivo>\n", argv[0]);
     return EXIT_FAILURE;
   }
 
@@ -93,12 +118,15 @@ int main(int argc, char *argv[]) {
     person_list[i] = p;
   }
 
-  queue<person> person_queue;
+  queue<person> direction0_queue;
+  queue<person> direction1_queue;
 
-  s.person_queue = person_queue;
+  s.direction0_queue = direction0_queue;
+  s.direction1_queue = direction1_queue;
+
   s.final_time = 0;
   s.timer = -1;
-  s.direction = 0;
+  s.direction = -1;
 
   thread stair_thread = thread(compute_stair, person_list, person_count);
   stair_thread.join();
