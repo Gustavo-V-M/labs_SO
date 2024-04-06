@@ -24,7 +24,6 @@ struct stair {
   queue<person> direction1_queue;
   int direction;
   int final_time;
-  int timer;
 };
 
 stair s;
@@ -53,7 +52,8 @@ void compute_timer() {
         s.direction = 1;
       }
     } else if (s.direction == 0) {
-      if (s.direction0_queue.front().arrive_time <= s.final_time) {
+      if (s.direction0_queue.front().arrive_time <= s.final_time ||
+          s.direction1_queue.front().arrive_time > s.final_time) {
         s.final_time = s.direction0_queue.front().arrive_time + 10;
         s.direction0_queue.pop();
       } else if (s.direction1_queue.front().arrive_time <
@@ -63,7 +63,8 @@ void compute_timer() {
         s.direction1_queue.pop();
       }
     } else if (s.direction == 1) {
-      if (s.direction1_queue.front().arrive_time <= s.final_time) {
+      if (s.direction1_queue.front().arrive_time <= s.final_time ||
+          s.direction0_queue.front().arrive_time > s.final_time) {
         s.final_time = s.direction1_queue.front().arrive_time + 10;
         s.direction1_queue.pop();
       } else if (s.direction0_queue.front().arrive_time <
@@ -125,7 +126,6 @@ int main(int argc, char *argv[]) {
   s.direction1_queue = direction1_queue;
 
   s.final_time = 0;
-  s.timer = -1;
   s.direction = -1;
 
   thread stair_thread = thread(compute_stair, person_list, person_count);
