@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <sys/mman.h>
+#include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 typedef struct {
@@ -14,12 +16,8 @@ typedef struct {
   int current_direction;
   int final_time;
 } stair;
-
 sem_t sem_stair;
-stair *s;
-void *compute_person(void *arg) {
-  person *cur_person = (person *)arg;
-
+void compute_person(person *cur_person, stair *s) {
   if (s->current_direction == cur_person->direction ||
       s->final_time < cur_person->arrival_time + 10) {
     sem_wait(&sem_stair);
@@ -31,7 +29,6 @@ void *compute_person(void *arg) {
     s->current_direction = cur_person->direction;
     sem_post(&sem_stair);
   }
-  return EXIT_SUCCESS;
 }
 int main(int argc, char *argv[]) {
   FILE *input;
@@ -42,6 +39,8 @@ int main(int argc, char *argv[]) {
   fscanf(input, "%i", &num_person);
 
   person people[num_person];
+  stair *s = (stair *)mmap(NULL, sizeof(stair), PROT_READ | PROT_WRITE,
+                           MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 
   sem_init(&sem_stair, 0, 1);
 
@@ -55,15 +54,21 @@ int main(int argc, char *argv[]) {
 
   fclose(input);
 
-  for (int n = 0; n < num_person; n++) {
-  }
+  pid_t cur_pid, wpid;
 
   for (int n = 0; n < num_person; n++) {
+    cur_pid = fork();
+    switch (cur_pid) {
+    case -1:
+      perror("Erro no fork");
+    case 0:
+      compute_person(&people[n], s);
+      exit(EXIT_SUCCESS);
+    }
   }
 
+  while ((wpid = wait(NULL) > 0))
+    ;
   printf("%i", s->final_time);
-
-  sem_destroy(&sem_stair);
-
   return EXIT_SUCCESS;
 }
