@@ -1,16 +1,16 @@
 # Projeto 1
 
 Repositório referente ao projeto 1 de Sistemas operacionais do curso de Ciência da Computação. \
-**OBS:** A Linguagem C++ foi utilizada ao invez da linguagem C por causa da biblioteca de Filas já inclusa no C++, já que, se fosse utilizado a linguagem C, teria que ser feita a implementação da fila do zero.
 
 **Autores:**\
 Gustavo Vilela Mitraud | 10400866
 
 ## Índice
 
-- `escada_rolante_threads.cpp` - Arquivo que resolve o problema utilizando Threads.
-- `escada_rolante_processos.cpp` - Arquivo que resolve o problema utilizando Processos.
+- `escada_rolante_threads.c` - Arquivo que resolve o problema utilizando Threads.
+- `escada_rolante_processos.c` - Arquivo que resolve o problema utilizando Processos.
 - `testes.sh` - Arquivo que compila os outros arquivos de forma correta, realiza os teste propostos pelo professor e mede o tempo de execução.
+- `compilacao.png` - Imagem que comprova compilacao e execução no ambiente da AWS
 
 ## Problema 
 
@@ -32,15 +32,17 @@ Apos isso, deve se responder as seguintes perguntas:
 
 ## Respostas das perguntas propostas
 
-**TODO** Responder perguntas 
+1. A estratégia utilizada para evitar que duas pessoas acessem a escada ao mesmo tempo foi a implementação de semaforos que, quando uma pessoa "entra" na escada rolante, impede que outras pessoas entrem ao mesmo tempo
+2. A forma que foi garantida que apenas uma direção esteja ativa ao mesmo tempo foi a utilização de uma variavel que era compartilhada entre cada pessoa: No caso da implementação utilizando threads, era uma variavel global, e no caso da implementação utilizando processos, um espaço de memoria alocado que pode ser acessado pelo processo pai e seus filhos;
+3. Em geral, ambas implementações são similares, visto que concorrência pode ser alcançada de ambas as formas (threads e processos). Em termos de diferenças, a utilização de threads possibilita que variaveis globais sejam utilizadas sem dificuldade, mas cria complicações na hora de chamar as funções (É necessario utilizar-se de void pointers para passar argumentos para as funções). Já a implementação utilizando processos, dificulta o compartilhamento de mensagens entre processos, visto que processos diferentes possuem espaços de memoria diferentes, mas facilita na utilização das funções. Finalizando, a implementação usando threads, para esse problema, foi a mais eficaz em resolver o problema, tendo em vista o tempo de execução e a complexidade da implementação. 
 
 ## Compilação
 
-**OBS: Até esse commit (60ff52dec153949a730509d6e591c11b9842bd4e), varios testes propostos pelo professor não estão funcionando**
+**OBS: Alguns testes propostos pelo professor estão falhando (Compilam, executam mas não dão o resultado esperado)**
 
 ### Requisitos
 
-- `g++ 12.2.0`
+- `gcc 12.2.0`
 - `Kernel: Linux 6.1.0-18 x86_64`
 
 ### Script de testes
@@ -51,5 +53,13 @@ Apos isso, deve se responder as seguintes perguntas:
 
 ### Manualmente 
 
-1. 
+#### Threads 
+
+1. Compilar o arquivo com `gcc  escada_rolante_threads.c -o threads.bin -lpthread` 
+2. Executar o script com `./threads.bin ./input/<NOME DO ARQUIVO>`, substituindo o nome do arquivo pelo o teste desejado 
+
+#### Processos 
+
+1. Compilar o arquivo com `gcc escada_rolante_processos.c -o processos.bin`
+2. Executar o script com `./processos.bin ./input/<NOME DO ARQUIVO>`, substituindo o nome do arquivo pelo teste desejado 
  
