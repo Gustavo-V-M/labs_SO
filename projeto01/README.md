@@ -34,7 +34,7 @@ Apos isso, deve se responder as seguintes perguntas:
 
 1. A estratégia utilizada para evitar que duas pessoas acessem a escada ao mesmo tempo foi a implementação de semaforos que, quando uma pessoa "entra" na escada rolante, impede que outras pessoas entrem ao mesmo tempo
 2. A forma que foi garantida que apenas uma direção esteja ativa ao mesmo tempo foi a utilização de uma variavel que era compartilhada entre cada pessoa: No caso da implementação utilizando threads, era uma variavel global, e no caso da implementação utilizando processos, um espaço de memoria alocado que pode ser acessado pelo processo pai e seus filhos;
-3. Em geral, ambas implementações são similares, visto que concorrência pode ser alcançada de ambas as formas (threads e processos). Em termos de diferenças, a utilização de threads possibilita que variaveis globais sejam utilizadas sem dificuldade, mas cria complicações na hora de chamar as funções (É necessario utilizar-se de void pointers para passar argumentos para as funções). Já a implementação utilizando processos, dificulta o compartilhamento de mensagens entre processos, visto que processos diferentes possuem espaços de memoria diferentes, mas facilita na utilização das funções. Finalizando, a implementação usando threads, para esse problema, foi a mais eficaz em resolver o problema, tendo em vista o tempo de execução e a complexidade da implementação. 
+3. Em geral, ambas implementações são similares, visto que concorrência pode ser alcançada de ambas as formas (threads e processos). Em termos de diferenças, a utilização de threads possibilita que variaveis globais sejam utilizadas sem dificuldade, mas cria complicações na hora de chamar as funções (É necessario utilizar-se de void pointers para passar argumentos para as funções). Já a implementação utilizando processos, dificulta o compartilhamento de mensagens entre processos, visto que processos diferentes possuem espaços de memoria diferentes, mas facilita na utilização das funções. Finalizando, a implementação usando threads, para esse problema, foi a mais eficaz em resolver o problema, tendo em vista o tempo de execução e a complexidade da implementação e utilização de recursos. 
 
 ## Compilação
 
@@ -43,6 +43,7 @@ Apos isso, deve se responder as seguintes perguntas:
 ### Requisitos
 
 - `gcc 12.2.0`
+- `bc 1.07.1`
 - `Kernel: Linux 6.1.0-18 x86_64`
 
 ### Script de testes
