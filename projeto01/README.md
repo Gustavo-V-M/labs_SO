@@ -28,7 +28,7 @@ O problema se consiste em implementar a escada rolante utilizando-se de threads 
 Apos isso, deve se responder as seguintes perguntas: 
 1. Qual a estratégia que você utilizou para evitar que duas pessoas acessem a escada rolante ao mesmo tempo em cada abordagem?
 2. Como garantir que somente uma das direções está ativa de cada vez em cada uma das abordagens?
-3. Discorra sobre as diferenças entre as implementações utilizando threads e processos e diga qual foi mais eficiente na solução do problema, justificando sua resposta.
+3. Discorra sobre as diferenças entre as implementações utilizando threads e processos e diga qual foi mais eficiente na solução do problema, justificando sua respostas 
 
 ## Respostas das perguntas propostas
 
@@ -39,12 +39,29 @@ Apos isso, deve se responder as seguintes perguntas:
 ## Compilação
 
 **OBS: Alguns testes propostos pelo professor estão falhando (Compilam, executam mas não dão o resultado esperado)**
+No meu ver, isso se dá por um erro na lógica criada para realizar um problema, e não na implementação de threads e processos. \ 
+Atualmente, a solução se baseia em cada pessoa ser uma thread/processo, e com um semaforo para controlar o acesso à variáveis. Uma possivel alternativa melhor seria a utilização de duas filas que controlam quando cada pessoa de cada direção deve entrar. \
+Eu tentei utilizar essa ideia em commits anteriores, mas por falta de tempo e pela quantidade de erros, resolvi tentar utilizando a logica atual, que, apesar de varios erros, compila e executa. 
 
 ### Requisitos
 
 - `gcc 12.2.0`
-- `bc 1.07.1`
+- `bc 1.07.1` (Para executar o script de testes)
 - `Kernel: Linux 6.1.0-18 x86_64`
+
+### Instalação dos requisitos 
+
+#### Fedora Based
+
+`sudo dnf install gcc bc`
+
+#### Arch Based 
+
+`sudo pacman -S gcc bc`
+
+#### Debian Based 
+
+`sudo apt install gcc bc`
 
 ### Script de testes
 
