@@ -5,6 +5,14 @@
 #include <strings.h>
 #include <unistd.h>
 
+/*
+ * Autor: Gustavo Vilela Mitraud | RA: 10400866
+ * Referências:
+ * https://www.man7.org/linux/man-pages/man7/pthreads.7.html - pthreads
+ * https://www.man7.org/linux/man-pages/man3/sem_init.3.html - sem_init
+ * https://www.man7.org/linux/man-pages/man3/sem_post.3.html - sem_post
+ * https://www.man7.org/linux/man-pages/man3/sem_wait.3.html - sem_wait
+ * */
 typedef struct {
   int direction;
   int arrival_time;

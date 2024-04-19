@@ -7,6 +7,13 @@
 #include <time.h>
 #include <unistd.h>
 
+/*
+ * Referências
+ * https://www.man7.org/linux/man-pages/man2/mmap.2.html - mmap para criação de
+ * espaço de memoria compartilhado Semaforos: Ver referências no arquivo
+ * escada_rolante_threads.c
+ * */
+
 typedef struct {
   int direction;
   int arrival_time;
