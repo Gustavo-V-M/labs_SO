@@ -1,21 +1,58 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#define MAX_ROW_SIZE 6
 
-int multi_matrix(int *A[], int b[], int i, int j, int *r){
-	for (int x = 0; x < i; x++){ // row
+int *x;
+int **A;
+int *r;
+int x_size;
+int A_row_count;
+
+
+void *add_rowwise(void *row_index){
+	int *sum = (int*)malloc(sizeof(int));
+	for (int i = 0; i < x_size; i++){
+		*sum += A[*(int*)row_index][i] * x[i];
+	}
+	r[*(int*)row_index] = *sum;
+}
+int main(int argc, char *argv[]){
+	x_size = 5;
+	A_row_count = 10;
+	x = (int*)malloc(x_size * sizeof(int));
+	for (int i = 0; i < x_size; i++){
+		x[i] = 1;
+	}
+	A = (int**)malloc(A_row_count * sizeof(int*));
+	for (int i = 0; i < A_row_count; i++){
+		A[i] = (int*)malloc(x_size * sizeof(int));
+		for (int j = 0; j < x_size; j++){
+			A[i][j] = j;
+		}
 	}
 
-}
-
-void *row_add(void* arg)
-	int *row = (int*)arg;
-	for (int x = 0; x < MAX_ROW_SIZE; x++){
-
+	// refactor the following code segment into a function
+	
+	pthread_t threads[A_row_count];
+	r = (int*)malloc(A_row_count * sizeof(int));
+	for (int i = 0; i < A_row_count; i++){
+		int success = pthread_create(
+				&(threads[i]),
+				NULL,
+				add_rowwise,
+				(void*)&i
+				);
+		if (success != 0){
+			printf("Error on creation of thread %i\n", i);
+			return EXIT_FAILURE;
+		}
 	}
-}
-int main(){
-
-	return EXIT_SUCCESS
+	for (int i = 0; i < A_row_count; i++){
+		int success = pthread_join(threads[i], NULL);
+		if (success != 0){
+			printf("Error on waiting for %i thread to finish\n");
+			return EXIT_FAILURE;
+		}
+	}
+	return EXIT_SUCCESS;
 }
