@@ -11,7 +11,7 @@
 
 ## Resolução do problema
 
-Para realizar o problema, foi levada em consideração o seguinte fato: a linha yi sera composta pela soma de cada elemento da linha Ai pelo seu elemento correspondente no vetor x. Portanto, cada linha pode ser separada em uma thread, com cada soma dentro dessa linha sendo separada novamente em uma thread
+Para realizar o problema, foi levada em consideração o seguinte fato: a linha yi sera composta pela soma de cada elemento da linha Ai pelo seu elemento correspondente no vetor x. Portanto, cada linha pode ser separada em uma thread.
 
 ## Índice
 
