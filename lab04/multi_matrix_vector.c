@@ -2,13 +2,17 @@
 #include <stdlib.h>
 #include <pthread.h>
 
+// Autor: Gustavo Vilela Mitraud
+// TODO Test with more matrixes
+// TODO add references
+
 int *x;
 int **A;
 int *r;
 int x_size;
 int A_row_count;
 
-
+ 
 void *add_rowwise(void *row_index){
 	int *sum = (int*)malloc(sizeof(int));
 	for (int i = 0; i < x_size; i++){
@@ -32,7 +36,6 @@ int main(int argc, char *argv[]){
 		}
 	}
 
-	// refactor the following code segment into a function
 	
 	pthread_t *threads = (pthread_t*)malloc(A_row_count * sizeof(pthread_t));
 	r = (int*)malloc(A_row_count * sizeof(int));
