@@ -15,6 +15,7 @@ void *add_rowwise(void *row_index){
 		*sum += A[*(int*)row_index][i] * x[i];
 	}
 	r[*(int*)row_index] = *sum;
+	return NULL;
 }
 int main(int argc, char *argv[]){
 	x_size = 5;
@@ -33,14 +34,16 @@ int main(int argc, char *argv[]){
 
 	// refactor the following code segment into a function
 	
-	pthread_t threads[A_row_count];
+	pthread_t *threads = (pthread_t*)malloc(A_row_count * sizeof(pthread_t));
 	r = (int*)malloc(A_row_count * sizeof(int));
 	for (int i = 0; i < A_row_count; i++){
+		int *index = (int*)malloc(sizeof(int));
+		*index = i;
 		int success = pthread_create(
 				&(threads[i]),
 				NULL,
 				add_rowwise,
-				(void*)&i
+				(void*)index
 				);
 		if (success != 0){
 			printf("Error on creation of thread %i\n", i);
@@ -53,6 +56,9 @@ int main(int argc, char *argv[]){
 			printf("Error on waiting for %i thread to finish\n");
 			return EXIT_FAILURE;
 		}
+	}
+	for (int i = 0; i < A_row_count; i++){
+		printf("%i\n", r[i]);
 	}
 	return EXIT_SUCCESS;
 }
