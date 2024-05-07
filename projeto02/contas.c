@@ -12,6 +12,12 @@
 //
 // https://linux.die.net/man/3/pthread_mutex_lock pthread_mutex_lock e
 // pthread__mutex_unlock
+//
+// https://www.di.ubi.pt/~operativos/praticos/html/9-threads.html#:~:text=%C2%B7%20Pthreads%20s%C3%A3o%20definidas%20como%20um,mais%20de%2060%20sub%2Drotinas.&text=%C2%B7%20O%20ficheiro%20pthread.,cada%20ficheiro%20de%20c%C3%B3digo%20fonte.
+// pthread_create 
+//
+
+
 typedef struct {
   int saldo;
 } account;
@@ -23,10 +29,10 @@ account from;
 pthread_mutex_t account_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *transfer(void *value) {
-  int *nullptr = NULL;
   int v = *((int *)value);
 
   pthread_mutex_lock(&account_mutex);
+  printf("Mutex bloqueado\n");
   if (from.saldo < v) {
     int *nullptr = NULL;
     printf("saldo insuficiente na conta from");
@@ -34,11 +40,28 @@ void *transfer(void *value) {
   } else {
     from.saldo -= v;
     to.saldo += v;
+    printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
   }
   pthread_mutex_unlock(&account_mutex);
-  return nullptr;
+  printf("Mutex liberado\n");
+  return NULL;
 }
 int main(int argc, char *argv[]) {
   // TODO realizar os testes que comprovam os requerimentos do problema
+  
+	pthread_t teste01;
+	pthread_t teste02;
+
+	int value = 10;
+
+	// inicializa cada conta com 100 unidades monetarias cada
+	
+	to.saldo = 100;
+	from.saldo = 100;
+
+	pthread_create(&teste01, NULL, transfer, (void*)&value);
+	pthread_create(&teste02, NULL, transfer, (void*)&value);
+
+	pthread_join(teste02, NULL);
   return EXIT_SUCCESS;
 }
