@@ -25,14 +25,27 @@ typedef struct {
 account to;
 account from;
 
+typedef struct {
+	int value;
+	int sw
+} transaction;
 // Inicialização estatica do mutex
 pthread_mutex_t account_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-void *transfer(void *value) {
-  int v = *((int *)value);
+void *transfer(void *arg) {
+  transaction t = *((transaction*)arg);
+  int v = t.value;
+  int sw = t.sw;
+
+ // TODO melhor a logica de troca das contas
 
   pthread_mutex_lock(&account_mutex);
   printf("Mutex bloqueado\n");
+  if (sw == 1){
+	  account aux = to;
+	  to = from;
+	  from = to;
+  }
   if (from.saldo < v) {
     int *nullptr = NULL;
     printf("saldo insuficiente na conta from");
@@ -42,6 +55,11 @@ void *transfer(void *value) {
     to.saldo += v;
     printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
   }
+	if (sw == 1){
+	  account aux = to;
+	  to = from;
+	  from = to;
+  } 
   pthread_mutex_unlock(&account_mutex);
   printf("Mutex liberado\n");
   return NULL;
@@ -53,15 +71,17 @@ int main(int argc, char *argv[]) {
 	pthread_t teste02;
 
 	int value = 10;
+	//int arg_1[] = {value, 1};
+	//int arg_2[] = {value, 0};
 
 	// inicializa cada conta com 100 unidades monetarias cada
 	
 	to.saldo = 100;
 	from.saldo = 100;
 
-	pthread_create(&teste01, NULL, transfer, (void*)&value);
-	pthread_create(&teste02, NULL, transfer, (void*)&value);
+	//pthread_create(&teste01, NULL, transfer, (void*)&arg_1);
+	//pthread_create(&teste02, NULL, transfer, (void*)&arg_2);
 
-	pthread_join(teste02, NULL);
+	//pthread_join(teste02, NULL);
   return EXIT_SUCCESS;
 }
