@@ -14,9 +14,8 @@
 // pthread__mutex_unlock
 //
 // https://www.di.ubi.pt/~operativos/praticos/html/9-threads.html#:~:text=%C2%B7%20Pthreads%20s%C3%A3o%20definidas%20como%20um,mais%20de%2060%20sub%2Drotinas.&text=%C2%B7%20O%20ficheiro%20pthread.,cada%20ficheiro%20de%20c%C3%B3digo%20fonte.
-// pthread_create 
+// pthread_create
 //
-
 
 typedef struct {
   int saldo;
@@ -26,62 +25,68 @@ account to;
 account from;
 
 typedef struct {
-	int value;
-	int sw
+  int value;
+  int sw;
 } transaction;
+
+int transaction_count;
 // Inicialização estatica do mutex
 pthread_mutex_t account_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *transfer(void *arg) {
-  transaction t = *((transaction*)arg);
-  int v = t.value;
-  int sw = t.sw;
+  transaction *t = (transaction *)arg;
+  int v = t->value;
+  int sw = t->sw;
 
- // TODO melhor a logica de troca das contas
+  // TODO melhor a logica de troca das contas
 
   pthread_mutex_lock(&account_mutex);
   printf("Mutex bloqueado\n");
-  if (sw == 1){
-	  account aux = to;
-	  to = from;
-	  from = to;
+  if (transaction_count <= 100) {
+    if (sw == 1) {
+      account aux = to;
+      to = from;
+      from = to;
+    }
+    if (from.saldo < v) {
+      int *nullptr = NULL;
+      printf("saldo insuficiente na conta from");
+      return nullptr;
+    } else {
+      from.saldo -= v;
+      to.saldo += v;
+      printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
+    }
+    if (sw == 1) {
+      account aux = to;
+      to = from;
+      from = to;
+    }
   }
-  if (from.saldo < v) {
-    int *nullptr = NULL;
-    printf("saldo insuficiente na conta from");
-    return nullptr;
-  } else {
-    from.saldo -= v;
-    to.saldo += v;
-    printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
-  }
-	if (sw == 1){
-	  account aux = to;
-	  to = from;
-	  from = to;
-  } 
   pthread_mutex_unlock(&account_mutex);
   printf("Mutex liberado\n");
   return NULL;
 }
 int main(int argc, char *argv[]) {
   // TODO realizar os testes que comprovam os requerimentos do problema
-  
-	pthread_t teste01;
-	pthread_t teste02;
 
-	int value = 10;
-	//int arg_1[] = {value, 1};
-	//int arg_2[] = {value, 0};
+  pthread_t teste01;
+  pthread_t teste02;
 
-	// inicializa cada conta com 100 unidades monetarias cada
-	
-	to.saldo = 100;
-	from.saldo = 100;
+  transaction_count = 0;
 
-	//pthread_create(&teste01, NULL, transfer, (void*)&arg_1);
-	//pthread_create(&teste02, NULL, transfer, (void*)&arg_2);
+  int value = 10;
+  int arg_1[] = {value, 1};
+  int arg_2[] = {value, 0};
 
-	//pthread_join(teste02, NULL);
+  // inicializa cada conta com 100 unidades monetarias cada
+
+  to.saldo = 100;
+  from.saldo = 100;
+
+  pthread_create(&teste01, NULL, transfer, (void *)&arg_1);
+  pthread_create(&teste02, NULL, transfer, (void *)&arg_2);
+
+  pthread_join(teste02, NULL);
   return EXIT_SUCCESS;
 }
