@@ -43,24 +43,26 @@ void *transfer(void *arg) {
   pthread_mutex_lock(&account_mutex);
   printf("Mutex bloqueado\n");
   if (transaction_count <= 100) {
-    if (sw == 1) {
-      account aux = to;
-      to = from;
-      from = to;
-    }
-    if (from.saldo < v) {
-      int *nullptr = NULL;
-      printf("saldo insuficiente na conta from");
-      return nullptr;
+    if (sw == 0) {
+      if (from.saldo < v) {
+        int *nullptr = NULL;
+        printf("saldo insuficiente na conta from");
+        return nullptr;
+      } else {
+        from.saldo -= v;
+        to.saldo += v;
+        printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
+      }
     } else {
-      from.saldo -= v;
-      to.saldo += v;
-      printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
-    }
-    if (sw == 1) {
-      account aux = to;
-      to = from;
-      from = to;
+      if (to.saldo < v) {
+        int *nullptr = NULL;
+        printf("saldo insuficiente na conta to");
+        return nullptr;
+      } else {
+        to.saldo -= v;
+        from.saldo += v;
+        printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
+      }
     }
   }
   pthread_mutex_unlock(&account_mutex);
