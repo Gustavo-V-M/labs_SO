@@ -7,7 +7,8 @@ Gustavo Vilela Mitraud | 10400866
 
 ## Índice
 
-**TODO** adicionar indice
+- `contas.c` Codigo desenvolvido para resolver o problema 
+- `compilacao.png` Screenshot que comprova compilação dentro da Maquina Virtual
 
 ## Problema 
 
@@ -25,14 +26,23 @@ As duas contas seguem os seguintes principios:
 ## Solucao
 
 Para solucionar cada condicao do problema, foram utilizadas as seguintes abordagens:\
-**TODO** adicionar solucao
 
-## Compilação
+1. Foram utilizados threads para possibilitar a simultaneadade de transações 
+2. Foi feita uma verificação dentro de cada transação caso 
 
-**TODO** Adicionar etapas de compilação 
+## Compilação  
 
 ### Requisitos
 
-**TODO** Adicionar requisitos
+- `gcc 14.1.1`
+- `Kernel 6.8.9 x86_64`
+
+### Passos de compilação.
+
+1. `gcc contas.c -lpthread`
+2. `./a.out`
+
+
+
 
 
