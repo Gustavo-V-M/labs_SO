@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 // Autor: Gustavo Vilela Mitraud | RA: 10400866
 // Referências:
@@ -38,33 +39,31 @@ void *transfer(void *arg) {
   int v = t->value;
   int sw = t->sw;
 
-  // TODO melhor a logica de troca das contas
+  // TODO logica de verificação de qunatidade de transações
 
+  while (transaction_count >= 100)
+    ;
   pthread_mutex_lock(&account_mutex);
   printf("Mutex bloqueado\n");
-  if (transaction_count <= 100) {
-    if (sw == 0) {
-      if (from.saldo < v) {
-        int *nullptr = NULL;
-        printf("saldo insuficiente na conta from");
-        return nullptr;
-      } else {
-        from.saldo -= v;
-        to.saldo += v;
-        printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
-      }
+  transaction_count++;
+  if (sw == 0) {
+    if (from.saldo < v) {
+      printf("saldo insuficiente na conta from\n");
     } else {
-      if (to.saldo < v) {
-        int *nullptr = NULL;
-        printf("saldo insuficiente na conta to");
-        return nullptr;
-      } else {
-        to.saldo -= v;
-        from.saldo += v;
-        printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
-      }
+      from.saldo -= v;
+      to.saldo += v;
+      printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
+    }
+  } else {
+    if (to.saldo < v) {
+      printf("saldo insuficiente na conta to\n");
+    } else {
+      to.saldo -= v;
+      from.saldo += v;
+      printf("Saldo to: %i\nSaldo from: %i\n", to.saldo, from.saldo);
     }
   }
+  transaction_count--;
   pthread_mutex_unlock(&account_mutex);
   printf("Mutex liberado\n");
   return NULL;
@@ -72,23 +71,25 @@ void *transfer(void *arg) {
 int main(int argc, char *argv[]) {
   // TODO realizar os testes que comprovam os requerimentos do problema
 
-  pthread_t teste01;
-  pthread_t teste02;
-
   transaction_count = 0;
 
   int value = 10;
-  int arg_1[] = {value, 1};
-  int arg_2[] = {value, 0};
+
+  transaction arg_1 = {10, 0};
 
   // inicializa cada conta com 100 unidades monetarias cada
 
   to.saldo = 100;
   from.saldo = 100;
 
-  pthread_create(&teste01, NULL, transfer, (void *)&arg_1);
-  pthread_create(&teste02, NULL, transfer, (void *)&arg_2);
+  pthread_t a[101];
 
-  pthread_join(teste02, NULL);
+  for (int i = 0; i < 101; i++) {
+    pthread_create(&a[i], NULL, transfer, (void *)&arg_1);
+  }
+  for (int i = 0; i < 101; i++) {
+    pthread_join(a[i], NULL);
+  }
+
   return EXIT_SUCCESS;
 }
