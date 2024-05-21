@@ -27,8 +27,13 @@ As duas contas seguem os seguintes principios:
 
 Para solucionar cada condicao do problema, foram utilizadas as seguintes abordagens:\
 
-1. Foram utilizados threads para possibilitar a simultaneadade de transações 
-2. Foi feita uma verificação dentro de cada transação caso 
+1. Foram utilizadas threads para possibilitar a simultaneadade de transações 
+2. Mesmo principio para solucionar o problema 1, foram utilizadas threads.
+3. Foi feita uma verificação dentro da função de cada transação que impede que a transação ocorra caso FROM não possua saldo o suficiente
+4. Cada transação é considerada uma `struct`, com `int value` e `int sw`, sendo `value` o valor da transação e `sw` é uma variação que realiza a troca de lugar das contas. Caso, para uma transação, `sw` seja 1, TO envia dinheiro para FROM.
+5. Foram criadas no maximo 100 threads.
+
+Por fim, para solucionar a condição de corrida causada pelo acesso simultanêo de varias threads, foi utilizado uma variável MUTEX.
 
 ## Compilação  
 
